@@ -1,4 +1,4 @@
-const COLORS = {
+export const COLORS = {
   primary: '#3498db', // Blue color for primary actions
   secondary: '#2ecc71', // Green color for secondary actions
   background: '#f4f4f4', // Light gray background color
@@ -9,4 +9,3 @@ const COLORS = {
   gray:"#e6e6e6"
 };
 
-export default COLORS;

@@ -19,14 +19,14 @@ export default function login() {
       <Text style={styles.welcomeText}>Welcome To</Text>
       <Text style={styles.subText}>Central Tapoban Ashram</Text>
       <Text style={styles.title}>Registration App</Text>
-       <Link href="/login">
+       <Link href="/login" asChild>
             <TouchableOpacity style={styles.loginButton}>
                 <Text style={styles.loginText}>Log In</Text>
             </TouchableOpacity>
       </Link>
      
       
-      <Link href="/registration">
+      <Link href="/registration" asChild>
         <TouchableOpacity style={styles.registerButton}>
           <Text style={styles.registerText}>Register</Text>
         </TouchableOpacity>
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     paddingVertical: 10,
     paddingHorizontal: 50,
-    borderRadius: 25,
+    borderRadius: 50,
     marginBottom: 15,
   },
   loginText: {

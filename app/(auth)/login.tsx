@@ -32,15 +32,20 @@ const SignInScreen = () => {
         if (!validateForm()) return
 
           try {
-            const response = await axios.post('http://127.0.0.1:8000/api/login', {
+            const response = await axios.post('http://192.168.0.174:8000/api/login', {
               email,
-             
               password,
-             
             });
             console.log(response);
             await AsyncStorage.setItem('@auth_token', response.data.token);
             console.log(await AsyncStorage.getItem('@auth_token'));
+            const {data:user} = await axios.get('http://192.168.0.174:8000/api/user', {
+                headers:{
+                  Accept:"application/json",
+                  Authorization: `Bearer ${response.data.token}`
+                }
+            });
+            console.log(user);
 
               Toast.show({ type: 'success', text1: 'Successful', text2: 'Login Successfully !' });
               router.push('/(tabs)')

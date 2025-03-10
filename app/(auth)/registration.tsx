@@ -51,7 +51,12 @@ const SignInScreen = () => {
               password,
               password_confirmation: confirmPassword,
             });
+            console.log(response);
+            await AsyncStorage.setItem('@auth_token', response.data.token);
+            console.log(await AsyncStorage.getItem('@auth_token'));
+
               Toast.show({ type: 'success', text1: 'Successful', text2: 'Registered Successfully !' });
+              router.push('/(tabs)')
           } catch (error) {
             Toast.show({ type: 'error', text1: 'Validation Error', text2: error.response.data.error });
           }
@@ -114,7 +119,7 @@ const SignInScreen = () => {
         <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
 
-      <Link href="/login" asChild>
+      <Link href="/" asChild>
         <TouchableOpacity style={styles.backButton}>
           <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>

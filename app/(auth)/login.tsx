@@ -1,88 +1,147 @@
+import React, { useState } from 'react';
+import { Link, Redirect,useRouter } from 'expo-router';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+const SignInScreen = () => {
+  const [userToken, setUserToken] = useState('');
+  const router = useRouter();
+  // State to store form inputs
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-export default function login() {
+
+  const validateForm = () => {
+    
+    if (!email.trim() || !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      Toast.show({ type: 'error', text1: 'Validation Error', text2: 'Enter a valid email address.' });
+      return false;
+    }
+    
+    if (!password.trim()) {
+      Toast.show({ type: 'error', text1: 'Validation Error', text2: 'Password must be at least 6 characters.' });
+      return false;
+    }
+    
+    return true;
+  };
+  // Handle registration logic
+  const handleRegister = async () => {
+        if (!validateForm()) return
+
+          try {
+            const response = await axios.post('http://127.0.0.1:8000/api/login', {
+              email,
+             
+              password,
+             
+            });
+            console.log(response);
+            await AsyncStorage.setItem('@auth_token', response.data.token);
+            console.log(await AsyncStorage.getItem('@auth_token'));
+
+              Toast.show({ type: 'success', text1: 'Successful', text2: 'Login Successfully !' });
+              router.push('/(tabs)')
+          } catch (error) {
+            Toast.show({ type: 'error', text1: 'Validation Error', text2: error.response.data.error });
+          }
+        };
+
   return (
-     <View style={styles.container}>
-      <Image source={require('../../assets/images/topoban.png')} style={styles.logo} />
-      <Text style={styles.welcomeText}>Welcome To</Text>
-      <Text style={styles.subText}>Central Tapoban Ashram</Text>
-      <Text style={styles.title}>Registration App</Text>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Sign In</Text>
 
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginText}>Log In</Text>
-      </TouchableOpacity>
       
-      <Link href="/registration">
-        <TouchableOpacity style={styles.registerButton}>
-          <Text style={styles.registerText}>Register</Text>
+
+      <Text style={styles.label}>Email *</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Your Email"
+        placeholderTextColor="#4D2600"
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+      />
+
+     
+      <Text style={styles.label}>Password *</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor="#4D2600"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+
+      
+
+      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Sign In</Text>
+      </TouchableOpacity>
+
+      <Link href="/registration" asChild>
+        <TouchableOpacity style={styles.backButton}>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
       </Link>
-
-      <Text style={styles.languageToggle}>🌐 Eng/বাংলা</Text>
+       <Toast />
     </View>
-  )
-}
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#4D2600',
-    alignItems: 'center',
-        borderRadius:15,
-    justifyContent: 'center',
+    backgroundColor: '#D5C295',
     padding: 20,
+    borderRadius:15,
+    justifyContent: 'center',
   },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
-  welcomeText: {
-    color: '#E8D3B5',
-    fontSize: 18,
-  },
-  subText: {
-    color: '#E8D3B5',
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  title: {
-    color: '#FFD700',
+  heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 30,
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#4D2600',
   },
-  loginButton: {
-    backgroundColor: '#E8D3B5',
+  label: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4D2600',
+    marginBottom: 5,
+  },
+  input: {
     borderWidth: 2,
-    paddingVertical: 10,
-    paddingHorizontal: 50,
+    borderColor: '#4D2600',
     borderRadius: 25,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    fontSize: 16,
+    color: '#4D2600',
     marginBottom: 15,
   },
-  loginText: {
-    fontSize: 18,
-    color: '#4D2600',
-    alignItems:'center',
-    fontWeight: 'bold',
-  },
   registerButton: {
-    borderColor: '#E8D3B5',
-    borderWidth: 2,
-    paddingVertical: 10,
-    paddingHorizontal: 50,
+    backgroundColor: '#4D2600',
+    paddingVertical: 12,
     borderRadius: 25,
+    alignItems: 'center',
+    marginTop: 10,
   },
-  registerText: {
+  backButton: {
+    backgroundColor: '#4D2600',
+    paddingVertical: 12,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
     fontSize: 18,
-    color: '#E8D3B5',
+    color: '#FFFFFF',
     fontWeight: 'bold',
-  },
-  languageToggle: {
-    color: '#E8D3B5',
-    fontSize: 16,
-    marginTop: 30,
   },
 });
+
+export default SignInScreen;

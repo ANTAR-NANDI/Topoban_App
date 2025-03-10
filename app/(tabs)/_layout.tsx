@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import COLORS from '@/constant/theme';
+import {COLORS} from '@/constant/theme';
 
 export default function TabsLayout() {
   return (
@@ -36,7 +36,7 @@ export default function TabsLayout() {
         name="bookmark"
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Ionicons name="bookmarks" size={size || 24} color={color || COLORS.primary} />
+            <Ionicons name="chatbubbles" size={size || 24} color={color || COLORS.primary} />
           ),
         }}
       />
@@ -55,7 +55,7 @@ export default function TabsLayout() {
         name="notifications"
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Ionicons name="heart" size={size || 24} color={color || COLORS.primary} />
+            <Ionicons name="notifications" size={size || 24} color={color || COLORS.primary} />
           ),
         }}
       />

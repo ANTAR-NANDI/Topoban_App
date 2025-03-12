@@ -1,7 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
-export default function create() {
+export default function Donation() {
   return (
     <View>
       <Text>create</Text>

@@ -39,6 +39,8 @@ const SignInScreen = () => {
             console.log(response);
             await AsyncStorage.setItem('@auth_token', response.data.token);
             console.log(await AsyncStorage.getItem('@auth_token'));
+            await AsyncStorage.setItem('@user', JSON.stringify(response.data.user.id));
+            console.log(await AsyncStorage.getItem('@user'));
             const {data:user} = await axios.get('http://192.168.0.174:8000/api/user', {
                 headers:{
                   Accept:"application/json",

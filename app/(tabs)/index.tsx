@@ -1,19 +1,62 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Image, TouchableOpacity, StyleSheet, Modal, ScrollView } from 'react-native';
 import { Card, Avatar } from 'react-native-paper';
-
+import Toast from 'react-native-toast-message';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Dashboard = () => {
   const [showModal, setShowModal] = useState(false);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [father_name, setFatherName] = useState('');
+  const [mother_name, setMotherName] = useState('');
+  const [permanent_address, setPermanentAddress] = useState('');
+  const [present_address, setPresentAddress] = useState('');
+  const [date_of_birth, setDateofBirth] = useState('');
 
-  const handleRegister = () => {
-    // Implement registration logic here
-    alert('Form Submitted');
+  //validation for input form 
+  const validateForm = () => {
+      if (!father_name.trim()) {
+        Toast.show({ type: 'error', text1: 'Validation Error', text2: 'Father Name is required.' });
+        return false;
+      }
+      if (!mother_name.trim()) {
+        Toast.show({ type: 'error', text1: 'Validation Error', text2: 'Father Name is required.' });
+        return false;
+      }
+      if (!permanent_address.trim()) {
+        Toast.show({ type: 'error', text1: 'Validation Error', text2: 'Permanent Address is required.' });
+        return false;
+      }
+      if (!date_of_birth.trim()) {
+        Toast.show({ type: 'error', text1: 'Validation Error', text2: 'Date of Birth is required.' });
+        return false;
+      }
+      if (!present_address.trim()) {
+        Toast.show({ type: 'error', text1: 'Validation Error', text2: 'Present Address is required.' });
+        return false;
+      }
+      
+      return true;
+    };
+  const handleRegister = async () => {
+    console.log(await AsyncStorage.getItem('@user'))
     setShowModal(false); // Close the modal after submission
+    if (!validateForm()) return
+    try {
+      
+            const response = await axios.post('http://192.168.0.174:8000/api/update_profile', {
+              father_name,
+              mother_name,
+              present_address,
+              permanent_address,
+              date_of_birth,
+              user:await AsyncStorage.getItem('@user')
+            });
+
+              Toast.show({ type: 'success', text1: 'Successful', text2: 'Data Updated Successfully !' });
+
+          } catch (error) {
+            Toast.show({ type: 'error', text1: 'Validation Error', text2: error.response.data.error });
+          }
   };
 
   return (
@@ -45,53 +88,51 @@ const Dashboard = () => {
             <ScrollView contentContainerStyle={styles.formContainer}>
               <Text style={styles.formTitle}>Registration Form</Text>
 
-              <Text style={styles.label}>Name *</Text>
+              <Text style={styles.label}>Fathers Name *</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Enter Your Name"
+                placeholder="Enter Your Father Name"
                 placeholderTextColor="#4D2600"
-                value={name}
-                onChangeText={setName}
+                value={father_name}
+                onChangeText={setFatherName}
               />
 
-              <Text style={styles.label}>Email *</Text>
+              <Text style={styles.label}>Mothers Name *</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Enter Your Email"
+                placeholder="Enter Your Mother Name"
                 placeholderTextColor="#4D2600"
-                value={email}
-                onChangeText={setEmail}
+                value={mother_name}
+                onChangeText={setMotherName}
                 keyboardType="email-address"
               />
 
-              <Text style={styles.label}>Phone Number *</Text>
+                <Text style={styles.label}>Present Address *</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Enter Your Phone Number"
+                placeholder="Enter Your Present Address"
                 placeholderTextColor="#4D2600"
-                value={phone}
-                onChangeText={setPhone}
-                keyboardType="phone-pad"
+                value={present_address}
+                onChangeText={setPresentAddress}
+                keyboardType="email-address"
               />
-
-              <Text style={styles.label}>Password *</Text>
+              <Text style={styles.label}>Permanent Address *</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Password"
+                placeholder="Enter Your Mother Name"
                 placeholderTextColor="#4D2600"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
+                value={permanent_address}
+                onChangeText={setPermanentAddress}
+                keyboardType="email-address"
               />
-
-              <Text style={styles.label}>Confirm Password *</Text>
+              <Text style={styles.label}>Date of Birth *</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Confirm Password"
+                placeholder="Enter Your Mother Name"
                 placeholderTextColor="#4D2600"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry
+                value={date_of_birth}
+                onChangeText={setDateofBirth}
+                keyboardType="email-address"
               />
 
               <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
@@ -102,6 +143,7 @@ const Dashboard = () => {
                 <Text style={styles.buttonText}>Close</Text>
               </TouchableOpacity>
             </ScrollView>
+            <Toast />
           </View>
         </View>
       </Modal>

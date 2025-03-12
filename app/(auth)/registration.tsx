@@ -53,6 +53,7 @@ const SignInScreen = () => {
             });
             console.log(response);
             await AsyncStorage.setItem('@auth_token', response.data.token);
+            await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
             console.log(await AsyncStorage.getItem('@auth_token'));
 
               Toast.show({ type: 'success', text1: 'Successful', text2: 'Registered Successfully !' });
